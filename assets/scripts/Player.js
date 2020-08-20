@@ -1,0 +1,77 @@
+// Learn cc.Class:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
+// Learn Attribute:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
+//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+
+cc.Class({
+    extends: cc.Component,
+
+    properties: {
+      speed: 1,
+      isLeft: false,
+      isRight: false
+    },
+
+    // LIFE-CYCLE CALLBACKS:
+
+    onLoad () {
+      cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+      if(StartGame) {
+        var seq = cc.repeatForever(
+          cc.sequence(
+              cc.moveBy(2, 200, 0),
+              cc.moveBy(2, -200, 0)
+          ));
+        this.node.runAction(seq);
+      }
+    },
+
+    start () {
+    },
+    onKeyDown () {
+      if(!StartGame) {
+        return
+      }
+      switch(event.keyCode) {
+        case cc.macro.KEY.a:
+            cc.log('Press a key');
+            cc.log(StartGame)
+            this.isLeft = true
+            this.isRight = false
+            // this.node.x -= this.step
+            break;
+        case cc.macro.KEY.d:
+            // this.node.x += this.step
+            this.isLeft = false
+            this.isRight = true
+            console.log('Press d key');
+            break;
+        case cc.macro.KEY.s:
+            this.isLeft = false
+            this.isRight = false
+            break;
+        case cc.macro.KEY.space:
+            console.log('start to jump');
+            break;
+      }
+    },
+    update (dt) {
+      // console.log(dt)
+      if (this.isLeft) {
+        if(this.node.x < -480) {
+          return
+        }
+        this.node.x -= this.speed * dt
+      } else if(this.isRight) {
+        if(this.node.x > 480) {
+          return
+        }
+        this.node.x += this.speed * dt
+      }
+    },
+});
